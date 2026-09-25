@@ -61,3 +61,7 @@ Thumbs.db
 *.xlsx
 *.xls
 *.csv
+
+# Internal Private Guides
+FRONTEND_GUIDE.md
+
