@@ -1,0 +1,63 @@
+# Dependencies
+node_modules/
+vendor/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files & Secrets
+.env
+.env.backup
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Databases & Backups
+*.sqlite
+*.sqlite*
+*.db
+*.bak
+/backend/database/backups/
+/backend/database/*.sqlite
+/backend/database/*.sqlite-journal
+
+# Laravel Backend Caches, Sessions, Logs
+/backend/bootstrap/cache/*
+!/backend/bootstrap/cache/.gitignore
+/backend/storage/*.key
+/backend/storage/framework/cache/*
+!/backend/storage/framework/cache/.gitignore
+/backend/storage/framework/cache/data/*
+!/backend/storage/framework/cache/data/.gitignore
+/backend/storage/framework/sessions/*
+!/backend/storage/framework/sessions/.gitignore
+/backend/storage/framework/testing/*
+!/backend/storage/framework/testing/.gitignore
+/backend/storage/framework/views/*
+!/backend/storage/framework/views/.gitignore
+/backend/storage/app/private/*
+!/backend/storage/app/private/.gitignore
+/backend/storage/logs/*
+!/backend/storage/logs/.gitignore
+.phpunit.result.cache
+
+# Frontend Builds
+/frontend/dist/
+/frontend/dist-ssr/
+/frontend/*.local
+.vite/
+
+# Operating System & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Sensitive / Business Spreadsheets & Data dumps
+*.xlsx
+*.xls
+*.csv
