@@ -6,13 +6,13 @@ import {
   DollarOutlined,
   FileTextOutlined,
   DashboardOutlined,
-  ShopOutlined,
-  SettingOutlined,
   UserOutlined,
   AppstoreOutlined,
   ShoppingCartOutlined,
-  BankOutlined,
   BarChartOutlined,
+  InboxOutlined,
+  HistoryOutlined,
+  ShopOutlined,
 } from '@ant-design/icons';
 import { HrProvider, useHr } from '../../context/HrContext';
 import { EmployeeListPage } from '../../pages/hr/EmployeeListPage';
@@ -20,17 +20,37 @@ import { EmployeeProfilePage } from '../../pages/hr/EmployeeProfilePage';
 import { EmployeeStatementPage } from '../../pages/hr/EmployeeStatementPage';
 import { PayrollListPage } from '../../pages/payroll/PayrollListPage';
 import { PayrollDashboardWidget } from '../../pages/payroll/PayrollDashboardWidget';
+import { InventoryListPage } from '../../pages/inventory/InventoryListPage';
+import { StockMovementsPage } from '../../pages/inventory/StockMovementsPage';
+import { PurchaseOrderListPage } from '../../pages/purchases/PurchaseOrderListPage';
+import { SupplierListPage } from '../../pages/suppliers/SupplierListPage';
+import { SupplierStatementPage } from '../../pages/suppliers/SupplierStatementPage';
 
 const { Header, Sider, Content } = Layout;
 
-/* ─────────── Home Dashboard Page ─────────── */
-const HomePage: React.FC = () => {
+export type PageKey =
+  | 'home'
+  | 'emp-list'
+  | 'emp-profile'
+  | 'payroll-dashboard'
+  | 'payroll-list'
+  | 'payroll-statement'
+  | 'inventory-list'
+  | 'stock-movements'
+  | 'purchases-list'
+  | 'supplier-list'
+  | 'supplier-statement';
+
+interface HomePageProps {
+  onNavigate: (page: PageKey) => void;
+}
+
+const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const { employees } = useHr();
-  const totalSalaries = employees.reduce((s, e) => s + e.base_salary, 0);
+  const totalSalaries = employees.reduce((sum, emp) => sum + emp.base_salary, 0);
 
   return (
     <div className="p-6 dir-rtl" dir="rtl">
-      {/* Welcome Banner */}
       <Card
         className="mb-6 shadow-lg overflow-hidden"
         style={{
@@ -58,18 +78,17 @@ const HomePage: React.FC = () => {
               مطعم رابحة — طعم البيوت
             </h1>
             <p style={{ color: '#cbd5e1', fontSize: '15px', margin: '4px 0 0' }}>
-              نظام الإدارة الشامل — الموارد البشرية والرواتب وحسابات العاملين
+              نظام الإدارة الشامل — الموارد البشرية، الرواتب، وسلاسل الإمداد والمخزون
             </p>
           </div>
         </div>
       </Card>
 
-      {/* Quick Stats */}
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} md={6}>
-          <Card className="text-center shadow-md" style={{ borderRadius: '14px', borderTop: '4px solid #d97706' }}>
+          <Card className="text-center shadow-md cursor-pointer hover:shadow-lg transition-shadow" style={{ borderRadius: '14px', borderTop: '4px solid #d97706' }} onClick={() => onNavigate('emp-list')}>
             <Statistic
-              title={<span className="font-bold text-gray-600">عدد الموظفين بالمطعم</span>}
+              title={<span className="font-bold text-gray-600">عدد الموظفين</span>}
               value={employees.length}
               prefix={<TeamOutlined className="text-amber-600" />}
               valueStyle={{ color: '#d97706', fontWeight: 700 }}
@@ -77,7 +96,7 @@ const HomePage: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
-          <Card className="text-center shadow-md" style={{ borderRadius: '14px', borderTop: '4px solid #059669' }}>
+          <Card className="text-center shadow-md cursor-pointer hover:shadow-lg transition-shadow" style={{ borderRadius: '14px', borderTop: '4px solid #059669' }} onClick={() => onNavigate('payroll-dashboard')}>
             <Statistic
               title={<span className="font-bold text-gray-600">كتلة المرتبات الشهرية</span>}
               value={(totalSalaries / 100).toLocaleString('ar-EG')}
@@ -87,71 +106,69 @@ const HomePage: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
-          <Card className="text-center shadow-md" style={{ borderRadius: '14px', borderTop: '4px solid #2563eb' }}>
+          <Card className="text-center shadow-md cursor-pointer hover:shadow-lg transition-shadow" style={{ borderRadius: '14px', borderTop: '4px solid #2563eb' }} onClick={() => onNavigate('inventory-list')}>
             <Statistic
-              title={<span className="font-bold text-gray-600">أقسام المطعم</span>}
-              value={3}
-              prefix={<AppstoreOutlined className="text-blue-600" />}
-              valueStyle={{ color: '#2563eb', fontWeight: 700 }}
+              title={<span className="font-bold text-gray-600">المخزون والمشتريات</span>}
+              value="سلاسل الإمداد"
+              prefix={<InboxOutlined className="text-blue-600" />}
+              valueStyle={{ color: '#2563eb', fontWeight: 700, fontSize: '20px' }}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} md={6}>
-          <Card className="text-center shadow-md" style={{ borderRadius: '14px', borderTop: '4px solid #7c3aed' }}>
+          <Card className="text-center shadow-md cursor-pointer hover:shadow-lg transition-shadow" style={{ borderRadius: '14px', borderTop: '4px solid #7c3aed' }} onClick={() => onNavigate('supplier-list')}>
             <Statistic
-              title={<span className="font-bold text-gray-600">الوحدات النشطة</span>}
-              value={2}
-              suffix="/ 6"
-              prefix={<BarChartOutlined className="text-purple-600" />}
-              valueStyle={{ color: '#7c3aed', fontWeight: 700 }}
+              title={<span className="font-bold text-gray-600">الموردين والحسابات</span>}
+              value="حسابات الموردين"
+              prefix={<ShopOutlined className="text-purple-600" />}
+              valueStyle={{ color: '#7c3aed', fontWeight: 700, fontSize: '20px' }}
             />
           </Card>
         </Col>
       </Row>
 
-      {/* Modules Overview */}
       <h2 className="text-lg font-bold text-gray-700 mt-6 mb-3">أقسام ووحدات النظام:</h2>
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} md={8}>
-          <Card hoverable className="shadow-md text-center" style={{ borderRadius: '14px' }}>
+          <Card hoverable className="shadow-md text-center cursor-pointer" style={{ borderRadius: '14px' }} onClick={() => onNavigate('emp-list')}>
             <TeamOutlined style={{ fontSize: '32px', color: '#d97706' }} />
             <h3 className="font-bold text-base mt-2 mb-1">شؤون الموظفين</h3>
-            <p className="text-gray-500 text-xs">بيانات وسجلات كل العاملين بالمطعم</p>
+            <p className="text-gray-500 text-xs">سجلات وبيانات الموظفين والعمليات المالية</p>
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8}>
-          <Card hoverable className="shadow-md text-center" style={{ borderRadius: '14px' }}>
+          <Card hoverable className="shadow-md text-center cursor-pointer" style={{ borderRadius: '14px' }} onClick={() => onNavigate('payroll-dashboard')}>
             <DollarOutlined style={{ fontSize: '32px', color: '#059669' }} />
-            <h3 className="font-bold text-base mt-2 mb-1">الرواتب والحسابات</h3>
-            <p className="text-gray-500 text-xs">مسيرات الرواتب وكشوف الحسابات المالية</p>
+            <h3 className="font-bold text-base mt-2 mb-1">الرواتب ومسيرات الصرف</h3>
+            <p className="text-gray-500 text-xs">احتساب مسيرات الرواتب الشهرية والتدقيق</p>
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8}>
-          <Card className="shadow-md text-center" style={{ borderRadius: '14px', opacity: 0.5 }}>
-            <ShoppingCartOutlined style={{ fontSize: '32px', color: '#94a3b8' }} />
-            <h3 className="font-bold text-base mt-2 mb-1 text-gray-400">المشتريات والمخزن</h3>
-            <p className="text-gray-400 text-xs">قريباً...</p>
+          <Card hoverable className="shadow-md text-center cursor-pointer" style={{ borderRadius: '14px' }} onClick={() => onNavigate('inventory-list')}>
+            <InboxOutlined style={{ fontSize: '32px', color: '#2563eb' }} />
+            <h3 className="font-bold text-base mt-2 mb-1">المخزون وخامات التشغيل</h3>
+            <p className="text-gray-500 text-xs">حصر الأصناف، متوسط التكلفة، وتسوية الهالك</p>
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8}>
-          <Card className="shadow-md text-center" style={{ borderRadius: '14px', opacity: 0.5 }}>
-            <BankOutlined style={{ fontSize: '32px', color: '#94a3b8' }} />
-            <h3 className="font-bold text-base mt-2 mb-1 text-gray-400">الحسابات والقيود المالية</h3>
-            <p className="text-gray-400 text-xs">قريباً...</p>
+          <Card hoverable className="shadow-md text-center cursor-pointer" style={{ borderRadius: '14px' }} onClick={() => onNavigate('purchases-list')}>
+            <ShoppingCartOutlined style={{ fontSize: '32px', color: '#0284c7' }} />
+            <h3 className="font-bold text-base mt-2 mb-1">أوامر الشراء والاستلام (GRN)</h3>
+            <p className="text-gray-500 text-xs">دورة الشراء وتأكيد الاستلام الفعلي بالمخزن</p>
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8}>
-          <Card className="shadow-md text-center" style={{ borderRadius: '14px', opacity: 0.5 }}>
-            <ShopOutlined style={{ fontSize: '32px', color: '#94a3b8' }} />
-            <h3 className="font-bold text-base mt-2 mb-1 text-gray-400">المبيعات ونقاط البيع</h3>
-            <p className="text-gray-400 text-xs">قريباً...</p>
+          <Card hoverable className="shadow-md text-center cursor-pointer" style={{ borderRadius: '14px' }} onClick={() => onNavigate('supplier-list')}>
+            <ShopOutlined style={{ fontSize: '32px', color: '#7c3aed' }} />
+            <h3 className="font-bold text-base mt-2 mb-1">إدارة الموردين وكشوف الحساب</h3>
+            <p className="text-gray-500 text-xs">سجل الموردين والأرصدة المستحقة وحركات السداد</p>
           </Card>
         </Col>
         <Col xs={24} sm={12} md={8}>
-          <Card className="shadow-md text-center" style={{ borderRadius: '14px', opacity: 0.5 }}>
-            <SettingOutlined style={{ fontSize: '32px', color: '#94a3b8' }} />
-            <h3 className="font-bold text-base mt-2 mb-1 text-gray-400">الإعدادات العامة</h3>
-            <p className="text-gray-400 text-xs">قريباً...</p>
+          <Card hoverable className="shadow-md text-center cursor-pointer" style={{ borderRadius: '14px' }} onClick={() => onNavigate('stock-movements')}>
+            <HistoryOutlined style={{ fontSize: '32px', color: '#ea580c' }} />
+            <h3 className="font-bold text-base mt-2 mb-1">سجل الحركات المخزنية</h3>
+            <p className="text-gray-500 text-xs">تتبع التوريد والصرف والهالك في الوقت الفعلي</p>
           </Card>
         </Col>
       </Row>
@@ -159,23 +176,20 @@ const HomePage: React.FC = () => {
   );
 };
 
-/* ─────────── Main App Shell ─────────── */
-type PageKey =
-  | 'home'
-  | 'emp-list'
-  | 'emp-profile'
-  | 'payroll-dashboard'
-  | 'payroll-list'
-  | 'payroll-statement';
-
 const AppShell: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<PageKey>('home');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(null);
+  const [selectedSupplierId, setSelectedSupplierId] = useState<number | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const handleSelectEmployee = (id: number) => {
     setSelectedEmployeeId(id);
     setCurrentPage('emp-profile');
+  };
+
+  const handleSelectSupplierStatement = (id: number) => {
+    setSelectedSupplierId(id);
+    setCurrentPage('supplier-statement');
   };
 
   const navigate = (page: PageKey) => {
@@ -185,7 +199,7 @@ const AppShell: React.FC = () => {
   const renderContent = () => {
     switch (currentPage) {
       case 'home':
-        return <HomePage />;
+        return <HomePage onNavigate={navigate} />;
       case 'emp-list':
         return <EmployeeListPage onSelectEmployee={handleSelectEmployee} />;
       case 'emp-profile':
@@ -201,14 +215,28 @@ const AppShell: React.FC = () => {
         return <PayrollListPage />;
       case 'payroll-statement':
         return <EmployeeStatementPage employeeId={selectedEmployeeId || 1} />;
+      case 'inventory-list':
+        return <InventoryListPage />;
+      case 'stock-movements':
+        return <StockMovementsPage />;
+      case 'purchases-list':
+        return <PurchaseOrderListPage />;
+      case 'supplier-list':
+        return <SupplierListPage onSelectSupplierStatement={handleSelectSupplierStatement} />;
+      case 'supplier-statement':
+        return (
+          <SupplierStatementPage
+            supplierId={selectedSupplierId || 1}
+            onBack={() => navigate('supplier-list')}
+          />
+        );
       default:
-        return <HomePage />;
+        return <HomePage onNavigate={navigate} />;
     }
   };
 
   return (
     <Layout style={{ height: '100vh', width: '100vw', overflow: 'hidden' }} className="dir-rtl" dir="rtl">
-      {/* Top Header */}
       <Header
         style={{
           background: '#0f172a',
@@ -255,7 +283,7 @@ const AppShell: React.FC = () => {
               مطعم رابحة
             </div>
             <div style={{ color: '#94a3b8', fontSize: '12px', fontWeight: 500, whiteSpace: 'nowrap', marginTop: '2px' }}>
-              نظام الإدارة الشامل
+              نظام الإدارة الشامل — ERP
             </div>
           </div>
         </div>
@@ -266,9 +294,7 @@ const AppShell: React.FC = () => {
         </div>
       </Header>
 
-      {/* Main Body */}
       <Layout style={{ flex: 1, height: 'calc(100vh - 72px)', overflow: 'hidden' }}>
-        {/* Professional Sidebar */}
         <Sider
           width={260}
           collapsedWidth={80}
@@ -287,7 +313,7 @@ const AppShell: React.FC = () => {
             mode="inline"
             inlineIndent={16}
             selectedKeys={[currentPage]}
-            defaultOpenKeys={['employees-section', 'payroll-section']}
+            defaultOpenKeys={['employees-section', 'payroll-section', 'supply-chain-section']}
             style={{ borderRight: 0, paddingTop: '8px', fontSize: '14px' }}
             onClick={({ key }) => navigate(key as PageKey)}
             items={[
@@ -317,12 +343,12 @@ const AppShell: React.FC = () => {
                   {
                     key: 'payroll-dashboard',
                     icon: <DashboardOutlined />,
-                    label: 'لوحة معلومات الرواتب',
+                    label: 'لوحة مؤشرات الرواتب',
                   },
                   {
                     key: 'payroll-list',
                     icon: <FileTextOutlined />,
-                    label: 'مسيرات الرواتب الشهري',
+                    label: 'مسيرات الرواتب الشهرية',
                   },
                   {
                     key: 'payroll-statement',
@@ -333,21 +359,41 @@ const AppShell: React.FC = () => {
               },
               { type: 'divider' },
               {
-                key: 'coming-soon',
-                icon: <AppstoreOutlined style={{ fontSize: '16px', color: '#94a3b8' }} />,
-                label: <span className="text-gray-400">أقسام قادمة قريباً</span>,
-                disabled: true,
+                key: 'supply-chain-section',
+                icon: <InboxOutlined style={{ fontSize: '17px', color: '#2563eb' }} />,
+                label: <span className="font-bold text-blue-800">سلاسل الإمداد والمخزون</span>,
                 children: [
-                  { key: 'inv', label: 'المشتريات والمخزن', disabled: true },
-                  { key: 'fin', label: 'الحسابات والقيود', disabled: true },
-                  { key: 'pos', label: 'المبيعات ونقاط البيع', disabled: true },
+                  {
+                    key: 'inventory-list',
+                    icon: <InboxOutlined />,
+                    label: 'أصناف وخامات المخزون',
+                  },
+                  {
+                    key: 'stock-movements',
+                    icon: <HistoryOutlined />,
+                    label: 'سجل حركات المخزون',
+                  },
+                  {
+                    key: 'purchases-list',
+                    icon: <ShoppingCartOutlined />,
+                    label: 'أوامر الشراء والاستلام',
+                  },
+                  {
+                    key: 'supplier-list',
+                    icon: <ShopOutlined />,
+                    label: 'الموردين والحسابات',
+                  },
+                  {
+                    key: 'supplier-statement',
+                    icon: <FileTextOutlined />,
+                    label: 'كشف حساب مورد',
+                  },
                 ],
               },
             ]}
           />
         </Sider>
 
-        {/* Main Content Area */}
         <Content style={{ background: '#f1f5f9', height: '100%', overflowY: 'auto' }}>
           {renderContent()}
         </Content>
@@ -356,7 +402,6 @@ const AppShell: React.FC = () => {
   );
 };
 
-/* ─────────── Root Export ─────────── */
 export const EmployeePayrollModuleContainer: React.FC = () => (
   <HrProvider>
     <AppShell />
