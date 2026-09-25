@@ -27,6 +27,7 @@ import { StockMovementsPage } from '../../pages/inventory/StockMovementsPage';
 import { PurchaseOrderListPage } from '../../pages/purchases/PurchaseOrderListPage';
 import { SupplierListPage } from '../../pages/suppliers/SupplierListPage';
 import { SupplierStatementPage } from '../../pages/suppliers/SupplierStatementPage';
+import logoImg from '@/assets/logo.png';
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -67,7 +68,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       >
         <div className="flex items-center gap-3 md:gap-5">
           <img
-            src="/logo.png"
+            src={logoImg}
             alt="مطعم رابحة"
             style={{
               height: isMobile ? '50px' : '80px',
@@ -352,7 +353,7 @@ const AppShell: React.FC = () => {
             }}
           >
             <img
-              src="/logo.png"
+              src={logoImg}
               alt="مطعم رابحة"
               style={{
                 height: isMobile ? '34px' : '46px',
